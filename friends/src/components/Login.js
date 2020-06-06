@@ -1,60 +1,54 @@
-import React from 'react';
-
+import React, { useState } from 'react';
 import axiosWithAuth from '../utils/axiosWithAuth';
 
-class Login extends React.Component {
-    state = {
-        credentials: {
-            username: "",
-            password: ""    
-        }
+const Login = (props) => {
+   const [credentials, setCredentials] = useState({
+       username: '',
+       password:''
+   })
+
+   const [isLoading, setIsLoading] = useState(false);
+
+
+    const handleChanges = e => {
+      setCredentials({
+          ...credentials,
+          [e.target.name]: e.target.value
+      });
     };
-
-
-    handleChanges = e => {
-        this.setState({
-            credentials: {
-                ...this.state.credentials,
-                [e.target.name]: e.target.value
-            }
-        })
-    };
-
-    login = e => {
+      
+    const login = e => {
      e.preventDefault();
+     setIsLoading(true);
      axiosWithAuth()
-     .post("/login", this.state.credentials)
+     .post("/login", credentials)
      .then(res => {
          localStorage.setItem("token", res.data.payload);
-         this.props.history.push("/protected");
+         setIsLoading(false);
+         props.history.push("/friendslist");
          console.log(res);
      })
      .catch(err=>
         console.error(err.message));
     };
-
-    render(){
-        return(
+       return(
             <div>
-                <form onSubmit = {this.login}>
+                <form onSubmit = {login}>
                     <input
                         type="text" 
                         name="username"
-                        value={this.state.credentials.username}
-                        onChange={this.handleChanges}
+                        value={credentials.username}
+                        onChange={handleChanges}
                     />
                     <input 
                         type="password"
                         name="password"
-                        value={this.state.credentials.password}
-                        onChange={this.handleChanges}
+                        value={credentials.password}
+                        onChange={handleChanges}
                     />
                     <button>Log In</button>
                 </form>
             </div>
         );
     }
-
-}
-
 export default Login;

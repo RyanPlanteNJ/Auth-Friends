@@ -14,12 +14,13 @@ const App = () => {
           <ul>
             <li>
               <Link to = "/login">Login</Link>
-              <Link to ="/protected">Friend's List</Link>
+              <Link to ="/friendslist">Friend's List</Link>
             </li>
           </ul>
           <Switch>
-            <PrivateRoute exact path ="/protected" component={FriendsList} />
+            <PrivateRoute exact path ="/friendslist" component={FriendsList} />
             <Route path="/login" component={Login} />
+            <Route component={Login} />
           </Switch>
         </div>
       </Router>
